@@ -43,7 +43,7 @@
         <div class="form-group row">
           <label for="nameInput" id="nameInputLabel" class="col-sm-2 col-form-label">이름: </label>
           <div class="col-sm-10">
-            <input type="text" name="nameInput" id= "nameInput" class="form-control" required>
+            <input type="text" name="csvFileName" id= "nameInput" class="form-control" required>
           </div>
         </div>
         

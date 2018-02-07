@@ -10,21 +10,21 @@ $(document).ready(function() {
 
 
     // 파일 업로드 
-    $("#submitData").submit(function(e) {
-        e.preventDefault(); 
-        var formData = new FormData($(this)[0]);
-        //console.log(formData.get('fileSelect'));
-        $.ajax({
-            url: window.location.pathname, // url 변경!   
-            type: 'POST',
-            data: formData,
-            success: function (data) {
-                //alert(data)
-                console.log('sumit success');
-            },
-            cache: false,
-            contentType: false,
-            processData: false
-        });
-    });
+//    $("#submitData").submit(function(e) {
+//        e.preventDefault(); 
+//        var formData = new FormData($(this)[0]);
+//        //console.log(formData.get('fileSelect'));
+//        $.ajax({
+//            url: 'http://localhost:8080/dataanalysis/csvFileSubmit', // url 변경!   
+//            type: 'POST',
+//            data: formData,
+//            success: function (data) {
+//                //alert(data)
+//                console.log('sumit success');
+//            },
+//            cache: false,
+//            contentType: false,
+//            processData: false
+//        });
+//    });
 });

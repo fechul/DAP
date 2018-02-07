@@ -41,7 +41,26 @@
    			<artifactId>opencsv</artifactId>
    			<version>4.0</version>
 		</dependency>
-
+		
+		<dependency>
+   			<groupId>commons-io</groupId>
+	  		<artifactId>commons-io</artifactId>
+   			<version>1.4</version>
+ 		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
+		<dependency>
+    		<groupId>commons-fileupload</groupId>
+    		<artifactId>commons-fileupload</artifactId>
+    		<version>1.3.2</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib -->
+		<dependency>
+		    <groupId>org.imgscalr</groupId>
+		    <artifactId>imgscalr-lib</artifactId>
+		    <version>4.2</version>
+		</dependency> 
 		
 		<!-- Mybatis -->
 		<dependency>
@@ -74,9 +93,6 @@
 			<artifactId>mariadb-java-client</artifactId>
 			<version>1.6.0</version>
 		</dependency>
-		
-		
-		
 		
 				
 		<!-- AspectJ -->
@@ -162,6 +178,12 @@
 			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>        
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+  	      <artifactId>commons-fileupload</artifactId>
+    	  <version>1.2.2</version>
+    	</dependency>
+    	
 	</dependencies>
     <build>
         <plugins>
@@ -192,7 +214,7 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
+                <groupId>org.codehaus.mojos-</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
                 <configuration>
