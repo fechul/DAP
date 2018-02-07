@@ -34,6 +34,15 @@
 			<version>${org.springframework-version}</version>
 		</dependency>
 		
+		
+		<!-- open CSV -->
+		<dependency>
+   			<groupId>com.opencsv</groupId>
+   			<artifactId>opencsv</artifactId>
+   			<version>4.0</version>
+		</dependency>
+
+		
 		<!-- Mybatis -->
 		<dependency>
 			<groupId>org.mybatis</groupId>

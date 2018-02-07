@@ -23,7 +23,7 @@ public class WoolimController {
 	@Autowired
 	private WoolimService woolimService;
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(WoolimController.class);
 
 	@RequestMapping(value = "/woolim", method = RequestMethod.GET)
 	public String woolim(Locale locale, Model model) {
