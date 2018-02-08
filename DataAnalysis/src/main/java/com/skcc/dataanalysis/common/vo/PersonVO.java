@@ -2,13 +2,29 @@ package com.skcc.dataanalysis.common.vo;
 
 public class PersonVO {
 	
+	private String 	id;
 	private String 	gender;
 	private int		age;
+	private String	university;
 	private String	major;
-	private String 	area;
+	private String	submajor;
 	private float	grade;
-	private String	character;
+	private String 	area;
+	private	String 	itability;
 	private String	career;
+	private String	isintern;
+	
+	private String	achieve;
+	private String 	idea;
+	private	String	professionalism;
+	private String	teamwork;
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public String getGender() {
 		return gender;
 	}
@@ -21,17 +37,23 @@ public class PersonVO {
 	public void setAge(int age) {
 		this.age = age;
 	}
+	public String getUniversity() {
+		return university;
+	}
+	public void setUniversity(String university) {
+		this.university = university;
+	}
 	public String getMajor() {
 		return major;
 	}
 	public void setMajor(String major) {
 		this.major = major;
 	}
-	public String getArea() {
-		return area;
+	public String getSubmajor() {
+		return submajor;
 	}
-	public void setArea(String area) {
-		this.area = area;
+	public void setSubmajor(String submajor) {
+		this.submajor = submajor;
 	}
 	public float getGrade() {
 		return grade;
@@ -39,11 +61,17 @@ public class PersonVO {
 	public void setGrade(float grade) {
 		this.grade = grade;
 	}
-	public String getCharacter() {
-		return character;
+	public String getArea() {
+		return area;
 	}
-	public void setCharacter(String character) {
-		this.character = character;
+	public void setArea(String area) {
+		this.area = area;
+	}
+	public String getItability() {
+		return itability;
+	}
+	public void setItability(String itability) {
+		this.itability = itability;
 	}
 	public String getCareer() {
 		return career;
@@ -51,7 +79,35 @@ public class PersonVO {
 	public void setCareer(String career) {
 		this.career = career;
 	}
-	
-	
-	
+	public String getIsintern() {
+		return isintern;
+	}
+	public void setIsintern(String isintern) {
+		this.isintern = isintern;
+	}
+	public String getAchieve() {
+		return achieve;
+	}
+	public void setAchieve(String achieve) {
+		this.achieve = achieve;
+	}
+	public String getIdea() {
+		return idea;
+	}
+	public void setIdea(String idea) {
+		this.idea = idea;
+	}
+	public String getProfessionalism() {
+		return professionalism;
+	}
+	public void setProfessionalism(String professionalism) {
+		this.professionalism = professionalism;
+	}
+	public String getTeamwork() {
+		return teamwork;
+	}
+	public void setTeamwork(String teamwork) {
+		this.teamwork = teamwork;
+	}
+
 }

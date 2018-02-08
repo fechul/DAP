@@ -24,7 +24,9 @@ public class CsvFileReadService {
 			Reader reader = Files.newBufferedReader(Paths.get(csvFileVO.getCsvFilePath()));
 			ColumnPositionMappingStrategy strategy = new ColumnPositionMappingStrategy();
             strategy.setType(PersonVO.class);
-            String[] memberFieldsToBindTo = {"gender", "age", "major", "area", "grade", "character", "career"};
+            String[] memberFieldsToBindTo = 
+            {"id", "gender", "age", "university", "major", "submajor", "grade", "area", "itability", "career", "isintern"
+            	 ,"achieve", "idea", "professionalism", "teamwork"};
             strategy.setColumnMapping(memberFieldsToBindTo);
 			
             CsvToBean csvToBean = 
@@ -37,12 +39,21 @@ public class CsvFileReadService {
             List<PersonVO> personVoList = csvToBean.parse();
 
             for (PersonVO person : personVoList) {
-                System.out.println("gender : " + person.getGender());
-                System.out.println("age : " + person.getAge());
-                System.out.println("area : " + person.getArea());
-                System.out.println("grade : " + person.getGrade());
-                System.out.println("character : " + person.getCharacter());
-                System.out.println("career : " + person.getCareer());
+            	System.out.println("id : "			+	person.getId());
+            	System.out.println("gender : "		+	person.getGender());
+            	System.out.println("age : "			+	person.getAge());
+            	System.out.println("university : "	+	person.getUniversity());
+            	System.out.println("major : "		+	person.getMajor());
+            	System.out.println("grade : "		+	person.getGrade());
+            	System.out.println("area : "		+	person.getArea());
+            	System.out.println("itability : "	+	person.getItability());
+            	System.out.println("career : "		+	person.getCareer());
+            	System.out.println("isintern : "	+	person.getIsintern());
+            	
+            	System.out.println("achieve : "			+	person.getAchieve());
+            	System.out.println("idea : "			+	person.getIdea());
+                System.out.println("professionalism : "	+	person.getProfessionalism());
+                System.out.println("teamwork : "		+	person.getTeamwork());
                 System.out.println("---------------------------");
             }
             
@@ -55,8 +66,9 @@ public class CsvFileReadService {
 	public void readCsvFileByReader(BufferedReader reader, String fileName) {
 		ColumnPositionMappingStrategy strategy = new ColumnPositionMappingStrategy();
         strategy.setType(PersonVO.class);
-        String[] memberFieldsToBindTo = {"gender", "age", "major", "area", "grade", "character", "career"};
-        strategy.setColumnMapping(memberFieldsToBindTo);
+        String[] memberFieldsToBindTo = 
+        {"id", "gender", "age", "university", "major", "submajor", "grade", "area", "itability", "career", "isintern"
+        	 ,"achieve", "idea", "professionalism", "teamwork"};strategy.setColumnMapping(memberFieldsToBindTo);
         
         CsvToBean csvToBean = 
         		new CsvToBeanBuilder(reader)
@@ -67,16 +79,35 @@ public class CsvFileReadService {
         
         List<PersonVO> personVoList = csvToBean.parse();
 
+        /*
         for (PersonVO person : personVoList) {
-            System.out.println("gender : " + person.getGender());
-            System.out.println("age : " + person.getAge());
-            System.out.println("area : " + person.getArea());
-            System.out.println("grade : " + person.getGrade());
-            System.out.println("character : " + person.getCharacter());
-            System.out.println("career : " + person.getCareer());
+        	System.out.println("id : "			+	person.getId());
+        	System.out.println("gender : "		+	person.getGender());
+        	System.out.println("age : "			+	person.getAge());
+        	System.out.println("university : "	+	person.getUniversity());
+        	System.out.println("major : "		+	person.getMajor());
+        	System.out.println("grade : "		+	person.getGrade());
+        	System.out.println("area : "		+	person.getArea());
+        	System.out.println("itability : "	+	person.getItability());
+        	System.out.println("career : "		+	person.getCareer());
+        	System.out.println("isintern : "	+	person.getIsintern());
+        	
+        	System.out.println("achieve : "			+	person.getAchieve());
+        	System.out.println("idea : "			+	person.getIdea());
+            System.out.println("professionalism : "	+	person.getProfessionalism());
+            System.out.println("teamwork : "		+	person.getTeamwork());
             System.out.println("---------------------------");
         }
-		
+		*/
+        
+        for(PersonVO abc : personVoList) {
+        	
+        	
+        }
+
+        
+        
+        
 	}
 
 }
