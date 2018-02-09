@@ -75,6 +75,7 @@ public class WoolimService {
 						map.put(text,relevance.toString());
 				    }
 				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
 				System.out.println(map);
 
