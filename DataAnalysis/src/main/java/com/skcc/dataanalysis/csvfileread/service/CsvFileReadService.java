@@ -3,7 +3,12 @@ package com.skcc.dataanalysis.csvfileread.service;
 import static org.hamcrest.CoreMatchers.instanceOf;
 
 import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -41,18 +46,18 @@ import com.skcc.dataanalysis.csvfileread.vo.CsvFileVO;
 @Service("csvFileReadService")
 public class CsvFileReadService {
 
-	public void readCsvFile(CsvFileVO csvFileVO) {
-		try{
-			Reader reader = Files.newBufferedReader(Paths.get(csvFileVO.getCsvFilePath()));
-			ColumnPositionMappingStrategy strategy = new ColumnPositionMappingStrategy();
+   public void readCsvFile(CsvFileVO csvFileVO) {
+      try{
+         Reader reader = Files.newBufferedReader(Paths.get(csvFileVO.getCsvFilePath()));
+         ColumnPositionMappingStrategy strategy = new ColumnPositionMappingStrategy();
             strategy.setType(PersonVO.class);
             String[] memberFieldsToBindTo = 
             {"id", "gender", "age", "university", "major", "submajor", "grade", "area", "itability", "career", "isintern"
-            	 ,"achieve", "idea", "professionalism", "teamwork"};
+                ,"achieve", "idea", "professionalism", "teamwork"};
             strategy.setColumnMapping(memberFieldsToBindTo);
-			
+         
             CsvToBean csvToBean = 
-            		new CsvToBeanBuilder(reader)
+                  new CsvToBeanBuilder(reader)
                     .withMappingStrategy(strategy)
                     .withSkipLines(1)
                     .withIgnoreLeadingWhiteSpace(true)
@@ -61,39 +66,39 @@ public class CsvFileReadService {
             List<PersonVO> personVoList = csvToBean.parse();
 
             for (PersonVO person : personVoList) {
-            	System.out.println("id : "			+	person.getId());
-            	System.out.println("gender : "		+	person.getGender());
-            	System.out.println("age : "			+	person.getAge());
-            	System.out.println("university : "	+	person.getUniversity());
-            	System.out.println("major : "		+	person.getMajor());
-            	System.out.println("grade : "		+	person.getGrade());
-            	System.out.println("area : "		+	person.getArea());
-            	System.out.println("itability : "	+	person.getItability());
-            	System.out.println("career : "		+	person.getCareer());
-            	System.out.println("isintern : "	+	person.getIsintern());
-            	
-            	System.out.println("achieve : "			+	person.getAchieve());
-            	System.out.println("idea : "			+	person.getIdea());
-                System.out.println("professionalism : "	+	person.getProfessionalism());
-                System.out.println("teamwork : "		+	person.getTeamwork());
-                System.out.println("---------------------------");
+               System.out.println("id : "         +   person.getId());
+               System.out.println("gender : "      +   person.getGender());
+               System.out.println("age : "         +   person.getAge());
+               System.out.println("university : "   +   person.getUniversity());
+               System.out.println("major : "      +   person.getMajor());
+               System.out.println("grade : "      +   person.getGrade());
+               System.out.println("area : "      +   person.getArea());
+               System.out.println("itability : "   +   person.getItability());
+               System.out.println("career : "      +   person.getCareer());
+               System.out.println("isintern : "   +   person.getIsintern());
+               
+               System.out.println("achieve : "         +   person.getAchieve());
+               System.out.println("idea : "         +   person.getIdea());
+               System.out.println("professionalism : "   +   person.getProfessionalism());
+               System.out.println("teamwork : "      +   person.getTeamwork());
+               System.out.println("---------------------------");
             }
             
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		
-	}
+      } catch (Exception e){
+         e.printStackTrace();
+      }
+      
+   }
 
-	public void readCsvFileByReader(BufferedReader reader, String fileName) {
-		ColumnPositionMappingStrategy strategy = new ColumnPositionMappingStrategy();
+   public void readCsvFileByReader(BufferedReader reader, String fileName) throws Exception {
+      ColumnPositionMappingStrategy strategy = new ColumnPositionMappingStrategy();
         strategy.setType(PersonVO.class);
         String[] memberFieldsToBindTo = 
         {"id", "gender", "age", "university", "major", "submajor", "grade", "area", "career", "category", "itability",
          "isintern" ,"achieve", "idea", "professionalism", "teamwork"};strategy.setColumnMapping(memberFieldsToBindTo);
         
         CsvToBean csvToBean = 
-        		new CsvToBeanBuilder(reader)
+              new CsvToBeanBuilder(reader)
                 .withMappingStrategy(strategy)
                 .withSkipLines(1)
                 .withIgnoreLeadingWhiteSpace(true)
@@ -103,169 +108,233 @@ public class CsvFileReadService {
 
         /*
         for (PersonVO person : personVoList) {
-        	System.out.println("id : "			+	person.getId());
-        	System.out.println("gender : "		+	person.getGender());
-        	System.out.println("age : "			+	person.getAge());
-        	System.out.println("university : "	+	person.getUniversity());
-        	System.out.println("major : "		+	person.getMajor());
-        	System.out.println("grade : "		+	person.getGrade());
-        	System.out.println("area : "		+	person.getArea());
-        	System.out.println("itability : "	+	person.getItability());
-        	System.out.println("career : "		+	person.getCareer());
-        	System.out.println("isintern : "	+	person.getIsintern());
-        	
-        	System.out.println("achieve : "			+	person.getAchieve());
-        	System.out.println("idea : "			+	person.getIdea());
-            System.out.println("professionalism : "	+	person.getProfessionalism());
-            System.out.println("teamwork : "		+	person.getTeamwork());
+           System.out.println("id : "         +   person.getId());
+           System.out.println("gender : "      +   person.getGender());
+           System.out.println("age : "         +   person.getAge());
+           System.out.println("university : "   +   person.getUniversity());
+           System.out.println("major : "      +   person.getMajor());
+           System.out.println("grade : "      +   person.getGrade());
+           System.out.println("area : "      +   person.getArea());
+           System.out.println("itability : "   +   person.getItability());
+           System.out.println("career : "      +   person.getCareer());
+           System.out.println("isintern : "   +   person.getIsintern());
+           
+           System.out.println("achieve : "         +   person.getAchieve());
+           System.out.println("idea : "         +   person.getIdea());
+            System.out.println("professionalism : "   +   person.getProfessionalism());
+            System.out.println("teamwork : "      +   person.getTeamwork());
             System.out.println("---------------------------");
         }
-		*/
+      */
+        String PersonInsertStr = "";
         
         for(PersonVO person : personVoList){
-        	
-        	System.out.println("여기서 각 Person의 row insert");
-        	
-        	person.getId();			// int 		id
-        	person.getGender();		// String	gender
-        	person.getAge();		// String	age;
-        	person.getUniversity();	// String	university;
-        	person.getMajor();		// String 	major;
-        	person.getSubmajor();	// String	submajor;
-        	person.getGrade();		// Double	grade;
-        	person.getArea();		// String	area;
-        	person.getCareer();		// String	career;
-        	person.getCategory();	// String	category;
-        	person.getIsintern();	// String	isintern;
-        }
+           System.out.println("여기서 각 Person의 row insert");
+
+           PersonInsertStr += person.getId()+",";
+          PersonInsertStr += person.getGender()+","; 
+          PersonInsertStr += person.getAge()+","; 
+          PersonInsertStr += person.getMajor()+","; 
+          PersonInsertStr += person.getSubmajor()+",";
+          PersonInsertStr += person.getArea()+",";
+          PersonInsertStr += person.getUniversity()+",";
+          PersonInsertStr += person.getGrade()+",";
+          PersonInsertStr += person.getCategory()+",";
+          PersonInsertStr += person.getCareer()+",";
+          PersonInsertStr += person.getIsintern()+"\n";
+          
+           /*person.getId();         // int       id
+           person.getGender();      // String   gender
+           person.getAge();      // String   age;
+           person.getUniversity();   // String   university;
+           person.getMajor();      // String    major;
+           person.getSubmajor();   // String   submajor;
+           person.getGrade();      // Double   grade;
+           person.getArea();      // String   area;
+           person.getCareer();      // String   career;
+           person.getCategory();   // String   category;
+           person.getIsintern();   // String   isintern;
+*/        
+       }
+        
+         URL url = new URL("http://169.56.124.28:7070/api/v1/util/hdfs/web?op=create&path=user%2Fhive%2Fitproject3%2Fperson%2F1.txt&overwrite=TRUE&user.name=hdfs");
+        String body = PersonInsertStr;
+
+        HttpURLConnection Personconn = (HttpURLConnection)url.openConnection();
+        Personconn.setRequestMethod("PUT");
+        Personconn.setDoInput(true);
+        Personconn.setDoOutput(true);
+        Personconn.setRequestProperty("Content-Type", "application/json");
+
+        OutputStream PersonOs = Personconn.getOutputStream();
+        PersonOs.write(body.getBytes("utf-8"));
+        PersonOs.flush();
+        PersonOs.close();
+        
+         BufferedReader in = new BufferedReader(new InputStreamReader(Personconn.getInputStream()));
+          String inputLine;
+          StringBuffer response = new StringBuffer();
+
+          while ((inputLine = in.readLine()) != null) {
+              response.append(inputLine);
+          }
+          in.close();
+          System.out.println(response.toString());
         
         Map<String, Integer> itAbilityMap = new HashedMap();
         
         for(PersonVO person : personVoList){
-        	List<String> itabilityList =Arrays.asList(person.getItability().split(","));
-        	for(String itabilityValue : itabilityList) {
-        		if(itAbilityMap.get(itabilityValue) == null) {
-        			itAbilityMap.put(itabilityValue, 1);
-        		}
-        		else {
-        			int count = itAbilityMap.get(itabilityValue);
-        			count++;
-        			itAbilityMap.put(itabilityValue, count);
-        		}
-        	}
+           List<String> itabilityList =Arrays.asList(person.getItability().split(","));
+           for(String itabilityValue : itabilityList) {
+              if(itAbilityMap.get(itabilityValue) == null) {
+                 itAbilityMap.put(itabilityValue, 1);
+              }
+              else {
+                 int count = itAbilityMap.get(itabilityValue);
+                 count++;
+                 itAbilityMap.put(itabilityValue, count);
+              }
+           }
         }
         
         System.out.println("여기서 it ability insert");
         
-        
+        String itabilInsertStr = "";
+        for(String keyword : itAbilityMap.keySet()) {
+           itabilInsertStr += keyword + ",";
+           itabilInsertStr += itAbilityMap.get(keyword) + "\n";
+        }
+
+      url = new URL("http://169.56.124.28:7070/api/v1/util/hdfs/web?op=create&path=user%2Fhive%2Fitproject3%2Fitability%2F1.txt&overwrite=TRUE&user.name=hdfs");
+      body = itabilInsertStr;
+      
+      HttpURLConnection itabilconn = (HttpURLConnection)url.openConnection();
+      itabilconn.setRequestMethod("PUT");
+      itabilconn.setDoInput(true);
+      itabilconn.setDoOutput(true);
+      itabilconn.setRequestProperty("Content-Type", "application/json");
+      
+      OutputStream itabilos = itabilconn.getOutputStream();
+      itabilos.write(body.getBytes("utf-8"));
+      itabilos.flush();
+      itabilos.close();
+      
+      in = new BufferedReader(new InputStreamReader(itabilconn.getInputStream()));
+      response = new StringBuffer();
+      
+      while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+      }
+      in.close();
+      System.out.println(response.toString());
         
         // 1번문항 처리
         Map<String, Double> achieveJsonWeight = new LinkedHashMap<String, Double>();
         for(PersonVO person : personVoList){
-        	String aibrilText = person.getAchieve();
-        	System.out.println("Person Id" + person.getId());
-        	Map<String, Double> aibrilJSON = this.getAibrilJSON(aibrilText);
-        	
-        	for(String keyword : aibrilJSON.keySet()) {
-        		if(achieveJsonWeight.get(keyword) == null) {
-        			achieveJsonWeight.put(keyword, aibrilJSON.get(keyword));
-        		}
-        		else{
-        			Double newRelevanceValue = achieveJsonWeight.get(keyword) + aibrilJSON.get(keyword);
-        			achieveJsonWeight.put(keyword, newRelevanceValue);
-        		}
-        	}
+           String aibrilText = person.getAchieve();
+           System.out.println("Person Id" + person.getId());
+           Map<String, Double> aibrilJSON = this.getAibrilJSON(aibrilText);
+           
+           for(String keyword : aibrilJSON.keySet()) {
+              if(achieveJsonWeight.get(keyword) == null) {
+                 achieveJsonWeight.put(keyword, aibrilJSON.get(keyword));
+              }
+              else{
+                 Double newRelevanceValue = achieveJsonWeight.get(keyword) + aibrilJSON.get(keyword);
+                 achieveJsonWeight.put(keyword, newRelevanceValue);
+              }
+           }
         }
 
 
         // 2번문항 처리
         Map<String, Double> ideaJsonWeight = new LinkedHashMap<String, Double>();
         for(PersonVO person : personVoList){
-        	String aibrilText = person.getIdea();
-        	Map<String, Double> aibrilJSON = this.getAibrilJSON(aibrilText);
-        	
-        	for(String keyword : aibrilJSON.keySet()) {
-        		if(ideaJsonWeight.get(keyword) == null) {
-        			ideaJsonWeight.put(keyword, aibrilJSON.get(keyword));
-        		}
-        		else{
-        			Double newRelevanceValue = ideaJsonWeight.get(keyword) + aibrilJSON.get(keyword);
-        			ideaJsonWeight.put(keyword, newRelevanceValue);
-        		}
-        	}
+           String aibrilText = person.getIdea();
+           Map<String, Double> aibrilJSON = this.getAibrilJSON(aibrilText);
+           
+           for(String keyword : aibrilJSON.keySet()) {
+              if(ideaJsonWeight.get(keyword) == null) {
+                 ideaJsonWeight.put(keyword, aibrilJSON.get(keyword));
+              }
+              else{
+                 Double newRelevanceValue = ideaJsonWeight.get(keyword) + aibrilJSON.get(keyword);
+                 ideaJsonWeight.put(keyword, newRelevanceValue);
+              }
+           }
         }
         
         // 3번문항 처리
         Map<String, Double> professionalismJsonWeight = new LinkedHashMap<String, Double>();
         for(PersonVO person : personVoList){
-        	String aibrilText = person.getProfessionalism();
-        	Map<String, Double> aibrilJSON = this.getAibrilJSON(aibrilText);
-        	
-        	for(String keyword : aibrilJSON.keySet()) {
-        		if(professionalismJsonWeight.get(keyword) == null) {
-        			professionalismJsonWeight.put(keyword, aibrilJSON.get(keyword));
-        		}
-        		else{
-        			Double newRelevanceValue = professionalismJsonWeight.get(keyword) + aibrilJSON.get(keyword);
-        			professionalismJsonWeight.put(keyword, newRelevanceValue);
-        		}
-        	}
+           String aibrilText = person.getProfessionalism();
+           Map<String, Double> aibrilJSON = this.getAibrilJSON(aibrilText);
+           
+           for(String keyword : aibrilJSON.keySet()) {
+              if(professionalismJsonWeight.get(keyword) == null) {
+                 professionalismJsonWeight.put(keyword, aibrilJSON.get(keyword));
+              }
+              else{
+                 Double newRelevanceValue = professionalismJsonWeight.get(keyword) + aibrilJSON.get(keyword);
+                 professionalismJsonWeight.put(keyword, newRelevanceValue);
+              }
+           }
         }
         
         // 4번문항 처리
         Map<String, Double> teamworkJsonWeight = new LinkedHashMap<String, Double>();
         for(PersonVO person : personVoList){
-        	String aibrilText = person.getTeamwork();
-        	Map<String, Double> aibrilJSON = this.getAibrilJSON(aibrilText);
-        	
-        	for(String keyword : aibrilJSON.keySet()) {
-        		if(teamworkJsonWeight.get(keyword) == null) {
-        			teamworkJsonWeight.put(keyword, aibrilJSON.get(keyword));
-        		}
-        		else{
-        			Double newRelevanceValue = teamworkJsonWeight.get(keyword) + aibrilJSON.get(keyword);
-        			teamworkJsonWeight.put(keyword, newRelevanceValue);
-        		}
-        	}
+           String aibrilText = person.getTeamwork();
+           Map<String, Double> aibrilJSON = this.getAibrilJSON(aibrilText);
+           
+           for(String keyword : aibrilJSON.keySet()) {
+              if(teamworkJsonWeight.get(keyword) == null) {
+                 teamworkJsonWeight.put(keyword, aibrilJSON.get(keyword));
+              }
+              else{
+                 Double newRelevanceValue = teamworkJsonWeight.get(keyword) + aibrilJSON.get(keyword);
+                 teamworkJsonWeight.put(keyword, newRelevanceValue);
+              }
+           }
         }
 
         Map<String, Double> totalKeywordMap = new LinkedHashMap<String, Double>();
         
         for(String keyword : achieveJsonWeight.keySet()) {
-        	if(totalKeywordMap.get(keyword) == null) {
-        		totalKeywordMap.put(keyword, achieveJsonWeight.get(keyword));
-        	}
-        	else{
-        		Double newRelevanceValue = totalKeywordMap.get(keyword) + achieveJsonWeight.get(keyword);
-        		totalKeywordMap.put(keyword, newRelevanceValue);
-        	}
+           if(totalKeywordMap.get(keyword) == null) {
+              totalKeywordMap.put(keyword, achieveJsonWeight.get(keyword));
+           }
+           else{
+              Double newRelevanceValue = totalKeywordMap.get(keyword) + achieveJsonWeight.get(keyword);
+              totalKeywordMap.put(keyword, newRelevanceValue);
+           }
         }
         for(String keyword : ideaJsonWeight.keySet()) {
-        	if(totalKeywordMap.get(keyword) == null) {
-        		totalKeywordMap.put(keyword, ideaJsonWeight.get(keyword));
-        	}
-        	else{
-        		Double newRelevanceValue = totalKeywordMap.get(keyword) + ideaJsonWeight.get(keyword);
-        		totalKeywordMap.put(keyword, newRelevanceValue);
-        	}
+           if(totalKeywordMap.get(keyword) == null) {
+              totalKeywordMap.put(keyword, ideaJsonWeight.get(keyword));
+           }
+           else{
+              Double newRelevanceValue = totalKeywordMap.get(keyword) + ideaJsonWeight.get(keyword);
+              totalKeywordMap.put(keyword, newRelevanceValue);
+           }
         }
         for(String keyword : professionalismJsonWeight.keySet()) {
-        	if(totalKeywordMap.get(keyword) == null) {
-        		totalKeywordMap.put(keyword, professionalismJsonWeight.get(keyword));
-        	}
-        	else{
-        		Double newRelevanceValue = totalKeywordMap.get(keyword) + professionalismJsonWeight.get(keyword);
-        		totalKeywordMap.put(keyword, newRelevanceValue);
-        	}
+           if(totalKeywordMap.get(keyword) == null) {
+              totalKeywordMap.put(keyword, professionalismJsonWeight.get(keyword));
+           }
+           else{
+              Double newRelevanceValue = totalKeywordMap.get(keyword) + professionalismJsonWeight.get(keyword);
+              totalKeywordMap.put(keyword, newRelevanceValue);
+           }
         }
         for(String keyword : teamworkJsonWeight.keySet()) {
-        	if(totalKeywordMap.get(keyword) == null) {
-        		totalKeywordMap.put(keyword, teamworkJsonWeight.get(keyword));
-        	}
-        	else{
-        		Double newRelevanceValue = totalKeywordMap.get(keyword) + teamworkJsonWeight.get(keyword);
-        		totalKeywordMap.put(keyword, newRelevanceValue);
-        	}
+           if(totalKeywordMap.get(keyword) == null) {
+              totalKeywordMap.put(keyword, teamworkJsonWeight.get(keyword));
+           }
+           else{
+              Double newRelevanceValue = totalKeywordMap.get(keyword) + teamworkJsonWeight.get(keyword);
+              totalKeywordMap.put(keyword, newRelevanceValue);
+           }
         }
 
         System.out.println(totalKeywordMap);
@@ -280,65 +349,87 @@ public class CsvFileReadService {
         
         String aibrilInsertStr = "";
         for(String keyword : sorted_map.keySet()) {
-        	aibrilInsertStr = aibrilInsertStr + keyword;
-        	aibrilInsertStr = aibrilInsertStr + ",";
-        	aibrilInsertStr = aibrilInsertStr + sorted_map.get(keyword);
+           aibrilInsertStr = aibrilInsertStr + keyword;
+           aibrilInsertStr = aibrilInsertStr + ",";
+           aibrilInsertStr = aibrilInsertStr + sorted_map.get(keyword);
+           aibrilInsertStr = aibrilInsertStr + "\n";
         }
-        
-        
-	}
 
-	public Map<String, Double> getAibrilJSON(String aibrilText){
-		NaturalLanguageUnderstanding service = new NaturalLanguageUnderstanding(
-				  NaturalLanguageUnderstanding.VERSION_DATE_2017_02_27,
-				  "b8836edc-9be8-4f18-b417-d3ba3d78d773",
-				  "MP7JzwuCCUf0"
-				);
+      url = new URL("http://169.56.124.28:7070/api/v1/util/hdfs/web?op=create&path=user%2Fhive%2Fitproject3%2Fcharacter%2F1.txt&overwrite=TRUE&user.name=hdfs");
+      body = aibrilInsertStr;
+      
+      HttpURLConnection Characterconn = (HttpURLConnection)url.openConnection();
+      Characterconn.setRequestMethod("PUT");
+      Characterconn.setDoInput(true);
+      Characterconn.setDoOutput(true);
+      Characterconn.setRequestProperty("Content-Type", "application/json");
+      
+      OutputStream Characteros = Characterconn.getOutputStream();
+      Characteros.write(body.getBytes("utf-8"));
+      Characteros.flush();
+      Characteros.close();
+      
+      in = new BufferedReader(new InputStreamReader(Characterconn.getInputStream()));
+      response = new StringBuffer();
+      
+      while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+      }
+      in.close();
+      System.out.println(response.toString());
+   }
 
-				KeywordsOptions keywords= new KeywordsOptions.Builder()
-				  .sentiment(true)
-				  .emotion(true)
-				  .build();
+   public Map<String, Double> getAibrilJSON(String aibrilText){
+      NaturalLanguageUnderstanding service = new NaturalLanguageUnderstanding(
+              NaturalLanguageUnderstanding.VERSION_DATE_2017_02_27,
+              "b8836edc-9be8-4f18-b417-d3ba3d78d773",
+              "MP7JzwuCCUf0"
+            );
 
-				Features features = new Features.Builder()
-				  .keywords(keywords)
-				  .build();
+            KeywordsOptions keywords= new KeywordsOptions.Builder()
+              .sentiment(true)
+              .emotion(true)
+              .build();
 
-				AnalyzeOptions parameters = new AnalyzeOptions.Builder()
-				  .text(aibrilText)
-				  .features(features)
-				  .build();
+            Features features = new Features.Builder()
+              .keywords(keywords)
+              .build();
 
-				AnalysisResults response = service
-				  .analyze(parameters)
-				  .execute();
-				
-				List<KeywordsResult> abrilResponse = response.getKeywords();
-			
-				JSONObject jObject = new JSONObject();
-				ObjectMapper mapper = new ObjectMapper();
-				JSONParser parser = new JSONParser();
-				Map<String, Double> map = new HashMap<String, Double>();
-				  
-				try {
-					for (int j = 0; j < abrilResponse.size(); j++)
-					{
-						String json = mapper.writeValueAsString(abrilResponse.get(j));
-						Object obj = parser.parse(json);
-						jObject = (JSONObject) obj;
-						
-						String text = (String)jObject.get("text");					   
-					    Double relevance = (Double)jObject.get("relevance");
-					    
-						map.put(text,relevance);
-				    }
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-				return map;
-	}
-	
-	
+            AnalyzeOptions parameters = new AnalyzeOptions.Builder()
+              .text(aibrilText)
+              .features(features)
+              .build();
+
+            AnalysisResults response = service
+              .analyze(parameters)
+              .execute();
+            
+            List<KeywordsResult> abrilResponse = response.getKeywords();
+         
+            JSONObject jObject = new JSONObject();
+            ObjectMapper mapper = new ObjectMapper();
+            JSONParser parser = new JSONParser();
+            Map<String, Double> map = new HashMap<String, Double>();
+              
+            try {
+               for (int j = 0; j < abrilResponse.size(); j++)
+               {
+                  String json = mapper.writeValueAsString(abrilResponse.get(j));
+                  Object obj = parser.parse(json);
+                  jObject = (JSONObject) obj;
+                  
+                  String text = (String)jObject.get("text");                  
+                   Double relevance = (Double)jObject.get("relevance");
+                   
+                  map.put(text,relevance);
+                }
+            } catch (Exception ex) {
+               ex.printStackTrace();
+            }
+            return map;
+   }
+   
+   
 }
 
 class ValueComparator implements Comparator<Object>
@@ -366,5 +457,3 @@ class ValueComparator implements Comparator<Object>
         }
     }
 }
-
-

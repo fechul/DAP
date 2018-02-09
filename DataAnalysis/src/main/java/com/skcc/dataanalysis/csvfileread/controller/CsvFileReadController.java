@@ -46,7 +46,12 @@ public class CsvFileReadController {
 		String fileName = file.getOriginalFilename();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 		
-		csvFileReadService.readCsvFileByReader(reader, fileName);
+		try{
+			csvFileReadService.readCsvFileByReader(reader, fileName);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 		
 		return "home";
 	}
