@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ibm.watson.developer_cloud.discovery.v1.model.QueryRelations.Sort;
 import com.ibm.watson.developer_cloud.natural_language_understanding.v1.NaturalLanguageUnderstanding;
 import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.AnalysisResults;
 import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.AnalyzeOptions;
@@ -223,7 +224,6 @@ public class CsvFileReadService {
         
         
         
-        
 	}
 
 	public Map<String, Double> getAibrilJSON(String aibrilText){
@@ -275,5 +275,6 @@ public class CsvFileReadService {
 				}
 				return map;
 	}
+
 	
 }
