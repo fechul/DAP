@@ -1,6 +1,9 @@
 package com.skcc.dataanalysis.retrieve.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.dataanalysis.retrieve.service.RetrieveService;
 
@@ -18,13 +22,19 @@ public class RetrieveController {
 	@Autowired
 	private RetrieveService retrieveService;
 	
-	@RequestMapping(value = "/retrieve/gender", method = RequestMethod.GET)
-	public JSONArray retrieveGender(Locale locale, Model model) {
-		JSONArray jsonArray = new JSONArray();
+	@RequestMapping(value = "/retrieve/gender")
+	public @ResponseBody List<Map<String , Object>> retrieveGender() {
+		List<Map<String, Object>> jsonObjectList = new ArrayList<Map<String, Object>>();
+
+		try{
+			jsonObjectList = retrieveService.getGender();
+			System.out.println(jsonObjectList);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 		
-		jsonArray = retrieveService.getGender();
-		
-		return jsonArray;
+		return jsonObjectList;
 	}
 	
 	

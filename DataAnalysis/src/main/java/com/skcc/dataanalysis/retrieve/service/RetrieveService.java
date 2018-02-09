@@ -1,30 +1,72 @@
 package com.skcc.dataanalysis.retrieve.service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.springframework.stereotype.Service;
+import org.json.simple.parser.JSONParser;
+import org.springframework.stereotype.Service;;
 
 @Service("retrieveService")
 public class RetrieveService {
 
-	public JSONArray getGender() {
-		JSONArray jsonArray = new JSONArray();
-		
-		
-		
-		
-		/*
-		var genderData = [{
-			"label": "남자",
-			"value": 37
-		}, {
-			"label": "여자",
-			"value": 22
-		}];
-		*/
-		
-		return jsonArray;
-	}
+	
+/*
+  var genderData = [
+					  	{
+					       "label": "남자",
+					       "value": 37
+					    }, 
+					    {
+					       "label": "여자",
+					       "value": 22
+					    }
+    				];
+*/
+public List<Map<String, Object>> getGender() throws Exception {
+	  List<Map<String, Object>> jsonObjectList = new ArrayList<Map<String, Object>>();
+      
+	  Map<String, Object> jsonObject = new HashMap<String, Object>();
+      
+      
+      URL url = new URL("http://169.56.124.28:7070/api/v1/util/jdbc/query/execute?type=hive&url=jdbc%3Ahive2%3A%2F%2Fdataplatform15.skcc.com%3A10000&database=itproject&user=hive&password=hive&query=SELECT+gender+as+label%2C+count(gender)+as+value+from+person+group+by+gender");
+
+      HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+      conn.setDoOutput(true);
+      conn.setRequestMethod("GET");
+      conn.setDoOutput(true);
+      
+      BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+      String inputLine;
+      StringBuffer response = new StringBuffer();
+
+      while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+      }
+      in.close();
+      String jsonStr = response.toString();
+      
+      JSONParser parser = new JSONParser();
+      Object obj = parser.parse(jsonStr);
+      JSONObject jsonObj = (JSONObject) obj;
+      
+      JSONObject 	data = 	(JSONObject)jsonObj.get("data");
+      JSONArray 	rows = 	(JSONArray)data.get("rows");
+      System.out.println("rows");
+      System.out.println(rows);
+
+      return rows;
+   }
+
+
 
 	public JSONArray getAge() {
 		JSONArray jsonArray = new JSONArray();
