@@ -6,11 +6,16 @@ import java.io.BufferedReader;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibm.watson.developer_cloud.discovery.v1.model.QueryRelations.Sort;
@@ -118,13 +123,16 @@ public class CsvFileReadService {
 		*/
         
         for(PersonVO person : personVoList){
+        	
+        	System.out.println("여기서 각 Person의 row insert");
+        	
         	person.getId();			// int 		id
         	person.getGender();		// String	gender
         	person.getAge();		// String	age;
         	person.getUniversity();	// String	university;
         	person.getMajor();		// String 	major;
         	person.getSubmajor();	// String	submajor;
-        	person.getGrade();		// String	grade;
+        	person.getGrade();		// Double	grade;
         	person.getArea();		// String	area;
         	person.getCareer();		// String	career;
         	person.getCategory();	// String	category;
@@ -147,6 +155,10 @@ public class CsvFileReadService {
         	}
         }
         
+        System.out.println("여기서 it ability insert");
+        
+        
+        
         // 1번문항 처리
         Map<String, Double> achieveJsonWeight = new LinkedHashMap<String, Double>();
         for(PersonVO person : personVoList){
@@ -164,7 +176,8 @@ public class CsvFileReadService {
         		}
         	}
         }
-        
+
+
         // 2번문항 처리
         Map<String, Double> ideaJsonWeight = new LinkedHashMap<String, Double>();
         for(PersonVO person : personVoList){
@@ -182,11 +195,10 @@ public class CsvFileReadService {
         	}
         }
         
-        
         // 3번문항 처리
         Map<String, Double> professionalismJsonWeight = new LinkedHashMap<String, Double>();
         for(PersonVO person : personVoList){
-        	String aibrilText = person.getIdea();
+        	String aibrilText = person.getProfessionalism();
         	Map<String, Double> aibrilJSON = this.getAibrilJSON(aibrilText);
         	
         	for(String keyword : aibrilJSON.keySet()) {
@@ -203,7 +215,7 @@ public class CsvFileReadService {
         // 4번문항 처리
         Map<String, Double> teamworkJsonWeight = new LinkedHashMap<String, Double>();
         for(PersonVO person : personVoList){
-        	String aibrilText = person.getIdea();
+        	String aibrilText = person.getTeamwork();
         	Map<String, Double> aibrilJSON = this.getAibrilJSON(aibrilText);
         	
         	for(String keyword : aibrilJSON.keySet()) {
@@ -216,12 +228,62 @@ public class CsvFileReadService {
         		}
         	}
         }
+
+        Map<String, Double> totalKeywordMap = new LinkedHashMap<String, Double>();
+        
+        for(String keyword : achieveJsonWeight.keySet()) {
+        	if(totalKeywordMap.get(keyword) == null) {
+        		totalKeywordMap.put(keyword, achieveJsonWeight.get(keyword));
+        	}
+        	else{
+        		Double newRelevanceValue = totalKeywordMap.get(keyword) + achieveJsonWeight.get(keyword);
+        		totalKeywordMap.put(keyword, newRelevanceValue);
+        	}
+        }
+        for(String keyword : ideaJsonWeight.keySet()) {
+        	if(totalKeywordMap.get(keyword) == null) {
+        		totalKeywordMap.put(keyword, ideaJsonWeight.get(keyword));
+        	}
+        	else{
+        		Double newRelevanceValue = totalKeywordMap.get(keyword) + ideaJsonWeight.get(keyword);
+        		totalKeywordMap.put(keyword, newRelevanceValue);
+        	}
+        }
+        for(String keyword : professionalismJsonWeight.keySet()) {
+        	if(totalKeywordMap.get(keyword) == null) {
+        		totalKeywordMap.put(keyword, professionalismJsonWeight.get(keyword));
+        	}
+        	else{
+        		Double newRelevanceValue = totalKeywordMap.get(keyword) + professionalismJsonWeight.get(keyword);
+        		totalKeywordMap.put(keyword, newRelevanceValue);
+        	}
+        }
+        for(String keyword : teamworkJsonWeight.keySet()) {
+        	if(totalKeywordMap.get(keyword) == null) {
+        		totalKeywordMap.put(keyword, teamworkJsonWeight.get(keyword));
+        	}
+        	else{
+        		Double newRelevanceValue = totalKeywordMap.get(keyword) + teamworkJsonWeight.get(keyword);
+        		totalKeywordMap.put(keyword, newRelevanceValue);
+        	}
+        }
+
+        System.out.println(totalKeywordMap);
+        
+        ValueComparator bvc = new ValueComparator(totalKeywordMap);
+        TreeMap<String , Double> sorted_map = new TreeMap<String , Double>(bvc);
+        sorted_map.putAll(totalKeywordMap);
+        
+        System.out.println("Abril 키워드 - 중요도 데이터");
+        System.out.println(sorted_map);
         
         
-        
-        System.out.println("성공");
-        System.out.println(achieveJsonWeight);
-        
+        String aibrilInsertStr = "";
+        for(String keyword : sorted_map.keySet()) {
+        	aibrilInsertStr = aibrilInsertStr + keyword;
+        	aibrilInsertStr = aibrilInsertStr + ",";
+        	aibrilInsertStr = aibrilInsertStr + sorted_map.get(keyword);
+        }
         
         
 	}
@@ -275,6 +337,34 @@ public class CsvFileReadService {
 				}
 				return map;
 	}
-
+	
 	
 }
+
+class ValueComparator implements Comparator<Object>
+{
+    Map<String , Double>    base;
+
+    public ValueComparator(Map<String, Double> base)
+    {
+        this.base = base;
+    }
+
+    public int compare(Object a, Object b)
+    {
+        if ((Double)base.get(a) < (Double)base.get(b))
+        {
+            return 1;
+        }
+        else if (base.get(a) == base.get(b))
+        {
+            return 0;
+        }
+        else
+        {
+            return -1;
+        }
+    }
+}
+
+
